@@ -1,4 +1,4 @@
-package config
+package com.example.toy_project_spring.config
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts

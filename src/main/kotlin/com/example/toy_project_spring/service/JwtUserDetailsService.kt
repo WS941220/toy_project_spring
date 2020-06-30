@@ -1,6 +1,6 @@
-package service
-import dao.UserRepository
-import model.User
+package com.example.toy_project_spring.service
+import com.example.toy_project_spring.dao.UserRepository
+import com.example.toy_project_spring.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -15,10 +15,10 @@ class JwtUserDetailsService : UserDetailsService {
     private val userRepository: UserRepository? = null
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String): UserDetails {
-        val user: User = userRepository?.findByUsername(username)
-                ?: throw UsernameNotFoundException("User not found with username: $username")
-        return org.springframework.security.core.userdetails.User(user.username, user.password,
+    override fun loadUserByUsername(userid: String): UserDetails {
+        val user: User = userRepository?.findByUserid(userid)
+                ?: throw UsernameNotFoundException("User not found with username: $userid")
+        return org.springframework.security.core.userdetails.User(user.userid, user.userpwd,
                 ArrayList())
     }
 }

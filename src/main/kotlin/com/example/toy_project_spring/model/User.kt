@@ -1,13 +1,13 @@
-package model
+package com.example.toy_project_spring.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity
-@Table(name = "YG1_USER")
+@Table(name = "TUSER")
 class User(
         @Id @GeneratedValue(strategy = GenerationType.AUTO)
-        var username: String = "",
+        var userid: String = "",
         @JsonIgnore
-        var password: String = ""
+        var userpwd: String = ""
 )

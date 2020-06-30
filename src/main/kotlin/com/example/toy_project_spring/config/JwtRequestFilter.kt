@@ -1,4 +1,4 @@
-package config
+package com.example.toy_project_spring.config
 
 import io.jsonwebtoken.ExpiredJwtException
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import service.JwtUserDetailsService
+import com.example.toy_project_spring.service.JwtUserDetailsService
 import java.io.IOException
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
@@ -26,13 +26,13 @@ class JwtRequestFilter : OncePerRequestFilter() {
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val requestTokenHeader = request.getHeader("Authorization")
-        var username: String? = null
+        var userid: String? = null
         var jwtToken: String? = null
         // JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7)
             try {
-                username = jwtTokenUtil?.getUsernameFromToken(jwtToken)
+                userid = jwtTokenUtil?.getUsernameFromToken(jwtToken)
             } catch (e: IllegalArgumentException) {
                 println("Unable to get JWT Token")
             } catch (e: ExpiredJwtException) {
@@ -42,8 +42,8 @@ class JwtRequestFilter : OncePerRequestFilter() {
             logger.warn("JWT Token does not begin with Bearer String")
         }
         //Once we get the token validate it.
-        if (username != null && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails: UserDetails = jwtUserDetailsService!!.loadUserByUsername(username)
+        if (userid != null && SecurityContextHolder.getContext().authentication == null) {
+            val userDetails: UserDetails = jwtUserDetailsService!!.loadUserByUsername(userid)
             // if token is valid configure Spring Security to manually set authentication
             if (jwtTokenUtil!!.validateToken(jwtToken!!, userDetails)) {
                 val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
