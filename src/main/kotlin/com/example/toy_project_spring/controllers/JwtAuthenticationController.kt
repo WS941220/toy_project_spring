@@ -14,23 +14,21 @@ import com.example.toy_project_spring.service.JwtUserDetailsService
 import java.util.*
 
 
-
 @RestController
-class JwtAuthenticationController {
-
-    @Autowired
-    private val authenticationManager: AuthenticationManager? = null
-    @Autowired
-    private val jwtTokenUtil: JwtTokenUtil? = null
-    @Autowired
-    private val userDetailsService: JwtUserDetailsService? = null
-
+class JwtAuthenticationController constructor(
+        @Autowired
+        private val authenticationManager: AuthenticationManager,
+        @Autowired
+        private val jwtTokenUtil: JwtTokenUtil,
+        @Autowired
+        private val userDetailsService: JwtUserDetailsService
+) {
     @RequestMapping(value = ["/authenticate"], method = [RequestMethod.POST])
     @Throws(Exception::class)
     fun createAuthenticationToken(@RequestBody authenticationRequest: JwtRequest): ResponseEntity<*> {
         authenticate(authenticationRequest.userid, authenticationRequest.userpwd)
-        val userDetails = userDetailsService!!.loadUserByUsername(authenticationRequest.userid)
-        val token = jwtTokenUtil!!.generateToken(userDetails)
+        val userDetails = userDetailsService.loadUserByUsername(authenticationRequest.userid)
+        val token = jwtTokenUtil.generateToken(userDetails)
         return ResponseEntity.ok<Any>(JwtResponse(token))
     }
 
@@ -39,7 +37,7 @@ class JwtAuthenticationController {
         Objects.requireNonNull(userid)
         Objects.requireNonNull(userpwd)
         try {
-            authenticationManager!!.authenticate(UsernamePasswordAuthenticationToken(userid, userpwd))
+            authenticationManager.authenticate(UsernamePasswordAuthenticationToken(userid, userpwd))
         } catch (e: DisabledException) {
             throw Exception("USER_DISABLED", e)
         } catch (e: BadCredentialsException) {

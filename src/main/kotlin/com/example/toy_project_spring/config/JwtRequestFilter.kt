@@ -17,11 +17,12 @@ import javax.servlet.http.HttpServletResponse
 
 
 @Component
-class JwtRequestFilter : OncePerRequestFilter() {
-    @Autowired
-    private val jwtUserDetailsService: JwtUserDetailsService? = null
-    @Autowired
-    private val jwtTokenUtil: JwtTokenUtil? = null
+class JwtRequestFilter constructor(
+        @Autowired
+        private val jwtUserDetailsService: JwtUserDetailsService,
+        @Autowired
+        private val jwtTokenUtil: JwtTokenUtil
+) : OncePerRequestFilter() {
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
@@ -32,7 +33,7 @@ class JwtRequestFilter : OncePerRequestFilter() {
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7)
             try {
-                userid = jwtTokenUtil?.getUsernameFromToken(jwtToken)
+                userid = jwtTokenUtil.getUsernameFromToken(jwtToken)
             } catch (e: IllegalArgumentException) {
                 println("Unable to get JWT Token")
             } catch (e: ExpiredJwtException) {
@@ -43,9 +44,9 @@ class JwtRequestFilter : OncePerRequestFilter() {
         }
         //Once we get the token validate it.
         if (userid != null && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails: UserDetails = jwtUserDetailsService!!.loadUserByUsername(userid)
+            val userDetails: UserDetails = jwtUserDetailsService.loadUserByUsername(userid)
             // if token is valid configure Spring Security to manually set authentication
-            if (jwtTokenUtil!!.validateToken(jwtToken!!, userDetails)) {
+            if (jwtTokenUtil.validateToken(jwtToken!!, userDetails)) {
                 val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.authorities)
                 usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
