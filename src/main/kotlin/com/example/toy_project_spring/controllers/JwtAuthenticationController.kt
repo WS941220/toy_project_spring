@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 import com.example.toy_project_spring.service.JwtUserDetailsService
 import java.util.*
 
-
 @RestController
 class JwtAuthenticationController constructor(
         @Autowired
