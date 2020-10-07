@@ -24,4 +24,6 @@ class CategoryController constructor(
     fun talkCategory(@PathVariable(value = "clasnm") clasnm: String): MutableList<AfterCate> {
         return categorService.getCategory(clasnm)
     }
+
+
 }

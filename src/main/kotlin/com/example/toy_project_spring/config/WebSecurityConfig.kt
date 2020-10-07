@@ -49,7 +49,10 @@ class WebSecurityConfig constructor(
     @Throws(Exception::class)
     override fun configure(httpSecurity: HttpSecurity) {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers(HttpMethod.OPTIONS, "/**")
+                .authorizeRequests().antMatchers("/authenticate").permitAll()
+                .antMatchers("/files/**").permitAll()
+                .antMatchers( "/talkCategory/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll().anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
