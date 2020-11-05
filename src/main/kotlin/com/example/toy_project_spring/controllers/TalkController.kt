@@ -77,7 +77,6 @@ class TalkController constructor(
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos)
     }
 
-
     @GetMapping("/files/{id}")
     @ResponseBody
     fun getFile(@PathVariable id: String): ResponseEntity<ByteArray> {
@@ -86,6 +85,5 @@ class TalkController constructor(
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.IMNAME + "\"")
                 .body(image.IMDATA)
     }
-
 
 }
